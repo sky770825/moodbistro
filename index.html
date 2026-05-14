@@ -91,9 +91,13 @@
 
     .hero-bg {
       position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(200,169,110,0.06) 0%, transparent 70%),
-        linear-gradient(to bottom, transparent 50%, var(--bg-deep) 100%);
+      background-image:
+        url('./assets/images/hero.jpg'),
+        linear-gradient(to bottom, rgba(13,11,9,0.45) 0%, rgba(13,11,9,0.6) 50%, rgba(13,11,9,0.85) 100%),
+        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(200,169,110,0.06) 0%, transparent 70%);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       z-index: 0;
     }
 
@@ -232,26 +236,23 @@
     }
 
     .about-image {
-      aspect-ratio: 4/5;
-      background:
-        linear-gradient(135deg, rgba(200,169,110,0.1) 0%, transparent 60%),
-        var(--bg-card);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      aspect-ratio: 16/9;
       overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
+    .about-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .about-image::before {
       content: '';
       position: absolute; inset: 0;
       background: radial-gradient(ellipse at center, rgba(200,169,110,0.08) 0%, transparent 70%);
-    }
-    .about-image-icon {
-      font-size: 4rem;
-      color: var(--gold-dim);
-      opacity: 0.5;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .about-text p {
@@ -348,8 +349,28 @@
       padding: 48px 36px;
       border: 1px solid var(--border);
       transition: border-color 0.3s;
+      position: relative;
+      overflow: hidden;
     }
+    .menu-category::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.12;
+      transition: opacity 0.3s, transform 0.6s;
+      z-index: 0;
+    }
+    .menu-category:hover::before { opacity: 0.18; transform: scale(1.05); }
     .menu-category:hover { border-color: var(--border-bright); }
+    .menu-category > * { position: relative; z-index: 1; }
+
+    /* Coffee & Brunch: coffee-brunch.jpg */
+    .menu-category:nth-child(1)::before { background-image: url('./assets/images/coffee-brunch.jpg'); }
+    /* Share Plates: food-plated.jpg */
+    .menu-category:nth-child(2)::before { background-image: url('./assets/images/food-plated.jpg'); }
+    /* Chef's Selection: dessert.jpg */
+    .menu-category:nth-child(3)::before { background-image: url('./assets/images/dessert.jpg'); }
 
     .menu-category-icon { font-size: 2rem; margin-bottom: 20px; }
     .menu-category-title {
@@ -410,46 +431,51 @@
     .gallery-item {
       overflow: hidden;
       position: relative;
-      background: var(--bg-card);
       cursor: pointer;
     }
     .gallery-item:first-child {
       grid-row: span 2;
     }
+
+    .gallery-item-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.6s ease;
+    }
+    .gallery-item:hover .gallery-item-bg { transform: scale(1.05); }
+
     .gallery-item::after {
       content: '';
       position: absolute; inset: 0;
-      background: rgba(200,169,110,0.05);
+      background: linear-gradient(to top, rgba(13,11,9,0.7) 0%, rgba(200,169,110,0.05) 60%, transparent 100%);
       transition: background 0.3s;
     }
-    .gallery-item:hover::after { background: rgba(200,169,110,0.12); }
+    .gallery-item:hover::after {
+      background: linear-gradient(to top, rgba(13,11,9,0.8) 0%, rgba(200,169,110,0.1) 60%, transparent 100%);
+    }
 
     .gallery-item-inner {
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      position: absolute; bottom: 0; left: 0; right: 0;
       padding: 24px;
-      border: 1px solid var(--border);
-      transition: border-color 0.3s, transform 0.4s;
-    }
-    .gallery-item:hover .gallery-item-inner {
-      border-color: var(--border-bright);
-      transform: scale(1.02);
+      z-index: 2;
     }
 
-    .gallery-icon { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.6; }
+    .gallery-icon { font-size: 2rem; margin-bottom: 16px; opacity: 0.6; }
     .gallery-label {
       font-size: 0.75rem;
       letter-spacing: 0.2em;
-      color: var(--text-muted);
-      text-align: center;
+      color: var(--text-primary);
+      text-align: left;
+      font-weight: 400;
     }
     .gallery-mood {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      color: var(--gold-dim);
+      color: var(--gold);
       font-size: 0.8rem;
       margin-top: 8px;
+      text-align: left;
     }
 
     /* ── CONTACT ── */
@@ -488,17 +514,17 @@
 
     .contact-map {
       aspect-ratio: 16/10;
-      background: var(--bg-deep);
       border: 1px solid var(--border);
+      overflow: hidden;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 12px;
+      background: var(--bg-deep);
     }
-    .contact-map-icon { font-size: 2rem; opacity: 0.4; }
-    .contact-map-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      letter-spacing: 0.15em;
+    .contact-map iframe {
+      width: 100%; height: 100%;
+      border: none;
+      filter: grayscale(0.6) contrast(1.1) brightness(0.85);
     }
 
     .contact-cta {
@@ -618,7 +644,7 @@
   <section id="about">
     <div class="about reveal">
       <div class="about-image">
-        <div class="about-image-icon">🥂</div>
+        <img src="./assets/images/interior-wide.jpg" alt="暮霧餐酒館室內空間" loading="lazy">
       </div>
       <div class="about-text">
         <div class="section-label">Our Story</div>
@@ -809,6 +835,7 @@
     </div>
     <div class="gallery-grid">
       <div class="gallery-item reveal">
+        <div class="gallery-item-bg" style="background-image: url('./assets/images/interior-wide.jpg')"></div>
         <div class="gallery-item-inner">
           <div class="gallery-icon">☀️</div>
           <div class="gallery-label">白天的咖啡時光</div>
@@ -816,13 +843,7 @@
         </div>
       </div>
       <div class="gallery-item reveal">
-        <div class="gallery-item-inner">
-          <div class="gallery-icon">🌆</div>
-          <div class="gallery-label">窗邊的日光</div>
-          <div class="gallery-mood">Natural Light</div>
-        </div>
-      </div>
-      <div class="gallery-item reveal">
+        <div class="gallery-item-bg" style="background-image: url('./assets/images/bar.jpg')"></div>
         <div class="gallery-item-inner">
           <div class="gallery-icon">🌙</div>
           <div class="gallery-label">夜晚的微醺</div>
@@ -830,6 +851,7 @@
         </div>
       </div>
       <div class="gallery-item reveal">
+        <div class="gallery-item-bg" style="background-image: url('./assets/images/food-plated.jpg')"></div>
         <div class="gallery-item-inner">
           <div class="gallery-icon">🍷</div>
           <div class="gallery-label">調酒時光</div>
@@ -837,6 +859,7 @@
         </div>
       </div>
       <div class="gallery-item reveal">
+        <div class="gallery-item-bg" style="background-image: url('./assets/images/dessert.jpg')"></div>
         <div class="gallery-item-inner">
           <div class="gallery-icon">🥂</div>
           <div class="gallery-label">料理特寫</div>
@@ -886,8 +909,13 @@
 
       <div class="reveal">
         <div class="contact-map">
-          <div class="contact-map-icon">📍</div>
-          <div class="contact-map-text">台北市大安區忠孝東路四段101巷12號</div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3614.702509094807!2d121.5576447!3d25.0420123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34439abe0c655f4d%3A0x0!2z5Y-w5YyX5biC5aSn5ZKM5pmC!5e0!3m2!1szh-TW!2stw!4v1700000000000"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="暮霧餐酒館位置">
+          </iframe>
         </div>
       </div>
     </div>
