@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暮霧餐酒館 Mood Bistro — 白天的從容，夜裡的微醺</title>
+  <meta name="description" content="台北東區日法融合餐酒館，職人咖啡與精選餐酒，帶給你從白晝到夜晚的完整體驗。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0d0b09;
+      --bg-card: #161310;
+      --bg-card-hover: #1e1a16;
+      --gold: #c8a96e;
+      --gold-light: #e0c896;
+      --gold-dim: #8a7347;
+      --text-primary: #f0ebe4;
+      --text-secondary: #a09888;
+      --text-muted: #6b6055;
+      --border: rgba(200, 169, 110, 0.15);
+      --border-bright: rgba(200, 169, 110, 0.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 300;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--gold-dim); color: var(--bg-deep); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px;
+      background: linear-gradient(to bottom, rgba(13,11,9,0.95) 0%, transparent 100%);
+      transition: background 0.4s;
+    }
+    nav.scrolled { background: rgba(13,11,9,0.97); backdrop-filter: blur(12px); }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 400;
+    }
+
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-reserve {
+      padding: 8px 22px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      transition: all 0.3s;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .nav-reserve:hover { background: var(--gold); color: var(--bg-deep); }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(200,169,110,0.06) 0%, transparent 70%),
+        linear-gradient(to bottom, transparent 50%, var(--bg-deep) 100%);
+      z-index: 0;
+    }
+
+    .hero-grain {
+      position: absolute; inset: -50%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 20px;
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.5em;
+      color: var(--gold-dim);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.3s ease forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.5s ease forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.3em;
+      margin-bottom: 50px;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.7s ease forwards;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 20px; justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.9s ease forwards;
+    }
+
+    .btn-primary {
+      padding: 14px 36px;
+      background: var(--gold);
+      color: var(--bg-deep);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      transition: all 0.3s;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-secondary {
+      padding: 14px 36px;
+      border: 1px solid var(--border-bright);
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      transition: all 0.3s;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .btn-secondary:hover { border-color: var(--gold); background: rgba(200,169,110,0.08); }
+
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      opacity: 0;
+      animation: fadeUp 1.2s 1.2s ease forwards;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 120px 60px; }
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.5em;
+      color: var(--gold-dim);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .section-divider {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 40px 0;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── ABOUT ── */
+    .about {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-image {
+      aspect-ratio: 4/5;
+      background:
+        linear-gradient(135deg, rgba(200,169,110,0.1) 0%, transparent 60%),
+        var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-image::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(200,169,110,0.08) 0%, transparent 70%);
+    }
+    .about-image-icon {
+      font-size: 4rem;
+      color: var(--gold-dim);
+      opacity: 0.5;
+    }
+
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 2;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .about-text p:first-of-type::first-letter {
+      font-size: 3rem;
+      float: left;
+      line-height: 1;
+      margin-right: 10px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .about-signature {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-top: 32px;
+    }
+
+    /* ── DAY/NIGHT SPLIT ── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
+    }
+    .split-item {
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .split-day { background: #1a1612; }
+    .split-night {
+      background: linear-gradient(135deg, #0f0d0a 0%, #1a1410 100%);
+      border-left: 1px solid var(--border);
+    }
+    .split-icon {
+      font-size: 2.5rem;
+      margin-bottom: 24px;
+    }
+    .split-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--gold-dim);
+      margin-bottom: 20px;
+    }
+    .split-title {
+      font-size: 1.6rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      margin-bottom: 20px;
+    }
+    .split-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+    }
+    .split-tags {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-top: 28px;
+    }
+    .split-tag {
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    /* ── MENU ── */
+    #menu { background: var(--bg-card); }
+
+    .menu-header { text-align: center; margin-bottom: 80px; }
+    .menu-header p { color: var(--text-secondary); max-width: 560px; margin: 0 auto; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .menu-category {
+      background: var(--bg-deep);
+      padding: 48px 36px;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .menu-category:hover { border-color: var(--border-bright); }
+
+    .menu-category-icon { font-size: 2rem; margin-bottom: 20px; }
+    .menu-category-title {
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      margin-bottom: 8px;
+      color: var(--gold);
+    }
+    .menu-category-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.2em;
+      margin-bottom: 28px;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item-name {
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+    .menu-item-eng {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .menu-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      color: var(--gold);
+      white-space: nowrap;
+      margin-left: 16px;
+    }
+
+    /* ── GALLERY ── */
+    #gallery { padding: 120px 40px; }
+
+    .gallery-header { text-align: center; margin-bottom: 60px; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 300px 300px;
+      gap: 4px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-card);
+      cursor: pointer;
+    }
+    .gallery-item:first-child {
+      grid-row: span 2;
+    }
+    .gallery-item::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(200,169,110,0.05);
+      transition: background 0.3s;
+    }
+    .gallery-item:hover::after { background: rgba(200,169,110,0.12); }
+
+    .gallery-item-inner {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, transform 0.4s;
+    }
+    .gallery-item:hover .gallery-item-inner {
+      border-color: var(--border-bright);
+      transform: scale(1.02);
+    }
+
+    .gallery-icon { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.6; }
+    .gallery-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .gallery-mood {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--gold-dim);
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg-card); }
+
+    .contact-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .contact-info-item {
+      margin-bottom: 40px;
+    }
+    .contact-info-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+    .contact-info-value {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+    }
+    .contact-info-value a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .contact-info-value a:hover { color: var(--gold); }
+
+    .contact-map {
+      aspect-ratio: 16/10;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px;
+    }
+    .contact-map-icon { font-size: 2rem; opacity: 0.4; }
+    .contact-map-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+    }
+
+    .contact-cta {
+      text-align: center;
+      margin-top: 60px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 60px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 32px;
+    }
+    .footer-social {
+      display: flex; gap: 24px; justify-content: center;
+      margin-bottom: 32px;
+    }
+    .footer-social a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      transition: color 0.3s;
+    }
+    .footer-social a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+
+      .about { grid-template-columns: 1fr; gap: 40px; }
+      .about-image { aspect-ratio: 16/9; }
+
+      .split { grid-template-columns: 1fr; }
+      .split-night { border-left: none; border-top: 1px solid var(--border); }
+
+      .menu-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-row: auto; }
+
+      .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+      .contact-map { aspect-ratio: 4/3; }
+    }
+
+    @media (max-width: 600px) {
+      .hero-title { font-size: 2.2rem; }
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">MOOD BISTRO</a>
+    <ul class="nav-links">
+      <li><a href="#about">品牌故事</a></li>
+      <li><a href="#menu">菜單</a></li>
+      <li><a href="#gallery">空間</a></li>
+      <li><a href="#contact">聯絡</a></li>
+    </ul>
+    <a href="#contact" class="nav-reserve">線上訂位</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-content">
+      <div class="hero-subtitle">TAIPEI EAST DISTRICT</div>
+      <h1 class="hero-title">暮霧<em>餐酒館</em></h1>
+      <p class="hero-tagline">白天的從容，夜裡的微醺</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-primary">線上訂位</a>
+        <a href="#menu" class="btn-secondary">查看菜單</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>SCROLL</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about reveal">
+      <div class="about-image">
+        <div class="about-image-icon">🥂</div>
+      </div>
+      <div class="about-text">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">在暮色裡<br>找到生活的節奏</h2>
+        <div class="section-divider"></div>
+        <p>暮霧，誕生於台北東區的巷弄裡。</p>
+        <p>我們觀察到一種生活節奏——白天認真工作，晚上想要一個能暫時逃離的地方。一杯好咖啡，一份用心料理的菜餚，配上一段不被打擾的時光。</p>
+        <p>日間供應職人手沖與精選輕食，入夜後由主廚操刀，以日法融合手法呈現在地食材的多種可能。每一道料理，都是一段從白晝到夜晚的故事。</p>
+        <p>在這裡，時間走得慢一點，光線打得剛剛好，適合說一些重要的事，也適合安靜地不发一言。</p>
+        <div class="about-signature">— 暮霧團隊</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAY / NIGHT -->
+  <div class="split">
+    <div class="split-item split-day reveal">
+      <div class="split-icon">☀️</div>
+      <div class="split-time">DAYLIGHT · 11:00 — 17:00</div>
+      <h3 class="split-title">白天的從容</h3>
+      <p class="split-desc">陽光從窗格間灑落，一杯職人手沖，搭配精心設計的輕食料理。這裡是適合工作、閱讀、與朋友淺談的從容空間。沒有壓力，只有好的咖啡與適度的音量。</p>
+      <div class="split-tags">
+        <span class="split-tag">職人手沖</span>
+        <span class="split-tag">精選單品</span>
+        <span class="split-tag">輕食料理</span>
+        <span class="split-tag">安靜辦公</span>
+      </div>
+    </div>
+    <div class="split-item split-night reveal">
+      <div class="split-icon">🌙</div>
+      <div class="split-time">EVENING · 18:00 — 01:00</div>
+      <h3 class="split-title">夜裡的微醺</h3>
+      <p class="split-desc">燈光暈黃，空氣中帶有淡淡的酒香與料理的香氣。主廚套餐以日法手法重新詮釋台灣食材，每一道都是限量的供應。選一支酒，慢慢喝，或者 just be here。</p>
+      <div class="split-tags">
+        <span class="split-tag">主廚套餐</span>
+        <span class="split-tag">日法融合</span>
+        <span class="split-tag">精選葡萄酒</span>
+        <span class="split-tag">威士忌</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="menu-header reveal">
+      <div class="section-label">Our Menu</div>
+      <h2 class="section-title">菜單</h2>
+      <p>每一份料理，都是主廚對食材的對話。我們不定時更換菜色，以確保食材的鮮度與最佳狀態。</p>
+    </div>
+
+    <div class="menu-grid">
+      <!-- 咖啡飲品 -->
+      <div class="menu-category reveal">
+        <div class="menu-category-icon">☕</div>
+        <div class="menu-category-title">咖啡飲品</div>
+        <div class="menu-category-sub">COFFEE & DRINKS</div>
+
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">職人手沖</div>
+            <div class="menu-item-eng">Barista Pour Over</div>
+          </div>
+          <div class="menu-item-price">NT$ 180</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">耶加雪菲</div>
+            <div class="menu-item-eng">Yirgacheffe, Ethiopia</div>
+          </div>
+          <div class="menu-item-price">NT$ 220</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">暮霧特調</div>
+            <div class="menu-item-eng">House Signature Latte</div>
+          </div>
+          <div class="menu-item-price">NT$ 190</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">伯爵奶茶</div>
+            <div class="menu-item-eng">Earl Grey Milk Tea</div>
+          </div>
+          <div class="menu-item-price">NT$ 150</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">無酒精氣泡飲</div>
+            <div class="menu-item-eng">Mocktail Sparkling</div>
+          </div>
+          <div class="menu-item-price">NT$ 160</div>
+        </div>
+      </div>
+
+      <!-- 分享料理 -->
+      <div class="menu-category reveal">
+        <div class="menu-category-icon">🍽️</div>
+        <div class="menu-category-title">分享料理</div>
+        <div class="menu-category-sub">SHARING PLATES</div>
+
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">慢燉牛小排</div>
+            <div class="menu-item-eng">Braised Short Rib, 8hr</div>
+          </div>
+          <div class="menu-item-price">NT$ 380</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">明太子馬鈴薯</div>
+            <div class="menu-item-eng">Mentaiko Potato Gratin</div>
+          </div>
+          <div class="menu-item-price">NT$ 220</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">烏魚子奶油麵</div>
+            <div class="menu-item-eng">Kentro Butter Pasta</div>
+          </div>
+          <div class="menu-item-price">NT$ 320</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">綜合起司盤</div>
+            <div class="menu-item-eng">Artisan Cheese Selection</div>
+          </div>
+          <div class="menu-item-price">NT$ 420</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">焦化奶油布蕾</div>
+            <div class="menu-item-eng">Burnt Butter Crème Brûlée</div>
+          </div>
+          <div class="menu-item-price">NT$ 180</div>
+        </div>
+      </div>
+
+      <!-- 主廚套餐 -->
+      <div class="menu-category reveal">
+        <div class="menu-category-icon">🍾</div>
+        <div class="menu-category-title">主廚套餐</div>
+        <div class="menu-category-sub">CHEF'S TASTING MENU</div>
+
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">開胃：柚子胡椒生蠔</div>
+            <div class="menu-item-eng">Oyster, Yuzu Kosho</div>
+          </div>
+          <div class="menu-item-price">NT$ 280</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">前菜：炙烤曼加利察豬</div>
+            <div class="menu-item-eng">Mangalitsa Pork, Charred</div>
+          </div>
+          <div class="menu-item-price">NT$ 420</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">主菜：紅燒和牛頰</div>
+            <div class="menu-item-eng">Wagyu Beef Cheek, Braised</div>
+          </div>
+          <div class="menu-item-price">NT$ 680</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">甜點：焙茶熔岩蛋糕</div>
+            <div class="menu-item-eng">Hojija Lava Cake</div>
+          </div>
+          <div class="menu-item-price">NT$ 220</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">完整套餐</div>
+            <div class="menu-item-eng">Full Tasting Course</div>
+          </div>
+          <div class="menu-item-price">NT$ 1,480</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="gallery-header reveal">
+      <div class="section-label">The Space</div>
+      <h2 class="section-title">體驗空間</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner">
+          <div class="gallery-icon">☀️</div>
+          <div class="gallery-label">白天的咖啡時光</div>
+          <div class="gallery-mood">Bright · Calm · Focused</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner">
+          <div class="gallery-icon">🌆</div>
+          <div class="gallery-label">窗邊的日光</div>
+          <div class="gallery-mood">Natural Light</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner">
+          <div class="gallery-icon">🌙</div>
+          <div class="gallery-label">夜晚的微醺</div>
+          <div class="gallery-mood">Warm · Moody · Intimate</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner">
+          <div class="gallery-icon">🍷</div>
+          <div class="gallery-label">調酒時光</div>
+          <div class="gallery-mood">Cocktail Hour</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner">
+          <div class="gallery-icon">🥂</div>
+          <div class="gallery-label">料理特寫</div>
+          <div class="gallery-mood">Culinary Art</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="reveal">
+        <div class="section-label">Visit Us</div>
+        <h2 class="section-title">來坐坐</h2>
+        <div class="section-divider"></div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-label">ADDRESS</div>
+          <div class="contact-info-value">台北市大安區忠孝東路四段<br>101巷12號1樓</div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">TELEPHONE</div>
+          <div class="contact-info-value">02-2771-5522</div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">HOURS</div>
+          <div class="contact-info-value">
+            咖啡時段 · 11:00 — 17:00<br>
+            餐酒時段 · 18:00 — 01:00<br>
+            週二公休
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">SOCIAL</div>
+          <div class="contact-info-value">
+            Instagram · <a href="#">@moodbistro.tw</a><br>
+            LINE · <a href="#">@moodbistro</a>
+          </div>
+        </div>
+
+        <div class="contact-cta">
+          <a href="#" class="btn-primary">線上訂位</a>
+          <a href="https://maps.google.com" target="_blank" class="btn-secondary">Google Maps</a>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="contact-map">
+          <div class="contact-map-icon">📍</div>
+          <div class="contact-map-text">台北市大安區忠孝東路四段101巷12號</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">MOOD BISTRO</div>
+    <div class="footer-tagline">「在暮色裡，找到生活的節奏」</div>
+    <div class="footer-social">
+      <a href="#">Instagram · @moodbistro.tw</a>
+      <a href="#">LINE · @moodbistro</a>
+    </div>
+    <div class="footer-copy">© 2026 Mood Bistro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Intersection Observer for reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
